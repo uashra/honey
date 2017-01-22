@@ -187,7 +187,7 @@ angular.module('ds.ysearch')
 
             var nmaid = "Nuance_ConUHack2017_20170119_210049";
             var nmaidKey = "0d11e9c5b897eefdc7e0aad840bf4316a44ea91f0d76a2b053be294ce95c7439dee8c3a6453cf7db31a12e08555b266d54c2300470e4140a4ea4c8ba285962fd";
-            var username = "websocket_sample";
+            var username = "Nuance_ConUHack2017";
 
             var appName = 'ConnuHacks';
             var companyName = 'HackAshraCo';
@@ -198,6 +198,8 @@ angular.module('ds.ysearch')
             socket = new WebSocket("wss://" + sHost + ":" + sPort + "/" + socketPath);
             socket.binaryType = "arraybuffer";
 
+            audioRecorder = new AudioRecorder(initAudioContext());
+
             socket.onmessage = function (event) {
                 if (isOfType("ArrayBuffer", event.data))
                 {
@@ -207,45 +209,64 @@ angular.module('ds.ysearch')
                 else
                 {
                     var response = JSON.parse(event.data);
-                    
                     console.log(response);
-                    
-                    if(response.QueryResult != null)
+
+                    if (response.QueryResult)
                     {
-                    	if(response.QueryResult.transcription != null)
-                    	{
-                    		scope.searchForm.searchString = response.QueryResult.transcription;
-                            
-                    		$("#sr_results").val("asa");
-                        	console.log(scope.searchForm.searchString);
-                    	}
-                    	
+                        if (response.QueryResult.result_type === "NinaStartSession") {
+                            // step 3
+                            socket.send(JSON.stringify({
+                                command: {
+                                    name: "NinaDoSpeechRecognition",
+                                    logSecurity: 'off',
+                                    sr_engine: 'NR',
+                                    sr_engine_parameters: {"operating_mode":'accurate'} // accurate, fast, warp
+                                }
+                            }));
+
+                            audioRecorder.start().then(
+                                function () {
+                                    console.log("Recorder stopped.");
+                                },
+
+                                function () {
+                                    console.log("Recording failed!!!");
+                                },
+
+                                function (data) {
+                                    console.log("Audio data received...");
+
+                                    if (shouldStopRecording) {
+                                        return;
+                                    }
+
+                                    // tuple: [encodedSpx, ampArray]
+                                    //   resampled audio as Int16Array
+                                    //   amplitude data as Uint8Array
+                                    var frames = data[0]; // Int16Array
+
+                                    socket.send(frames.buffer);
+                                }
+                            );
+                        }
+                        else if (response.QueryResult.result_type === "NinaEndSession") {
+                            socket.close();
+                            socket = undefined;
+                        }
+
+                        try
+                        {
+                            scope.search.searchString = response.QueryResult.transcription;
+                        } catch (err)
+                        {
+                        }
+
                     }
-                    
-                    
-                    /*
-                    if(response.QueryInfo != null)
-                    {
-                    	console.log(response.QueryInfo.result_type);
-                    }
-                    else if(response.QueryResult != null)
-                    {
-                    	console.log(response.Result);
-                    }
-                    else            	
-                    {
-                    	scope.somePlaceholder = response.QueryResult.transcription;
-                    
-                    	console.log(scope.somePlaceholder);
-                    
-                    	console.log(response);
-                    }
-                    
-                    */
                 }
             };
 
             socket.onopen = function () {
+                // step 1
                 socket.send(JSON.stringify({
                     connect: {
                         nmaid: nmaid,
@@ -254,61 +275,19 @@ angular.module('ds.ysearch')
                     }
                 }));
 
-                setTimeout(function() {
-                	socket.send(JSON.stringify({
-                        command: {
-                            name: "NinaStartSession",
-                            logSecurity: 'off', // off, mask, encrypt
-                            appName: appName,
-                            companyName: companyName,
-                            cloudModelVersion: cloudModelVersion,
-                            clientAppVersion: clientAppVersion,
-                            agentURL: defaultAgent,
-                            apiVersion: 'LATEST'
-                        }
-                    }));
-                }, 1000);
-
-                setTimeout(function() {
-                	socket.send(JSON.stringify({
-                        command: {
-                            name: "NinaDoSpeechRecognition",
-                            logSecurity: 'off',
-                            sr_engine: 'NR',
-                            sr_engine_parameters: {"operating_mode":'accurate'} // accurate, fast, warp
-                        }
-                    }));
-                }, 2000);
-                
-                audioRecorder = new AudioRecorder(initAudioContext());
-
-                
-                setTimeout(function() {                
-	                audioRecorder.start().then(
-	                    function () {
-	                        console.log("Recorder stopped.");
-	                    },
-	
-	                    function () {
-	                        console.log("Recording failed!!!");
-	                    },
-	
-	                    function (data) {
-	                        console.log("Audio data received...");
-	
-	                        if (shouldStopRecording) {
-	                            return;
-	                        }
-	
-	                        // tuple: [encodedSpx, ampArray]
-	                        //   resampled audio as Int16Array
-	                        //   amplitude data as Uint8Array
-	                        var frames = data[0]; // Int16Array
-	
-	                        socket.send(frames.buffer);
-	                    }
-	                ); 
-                }, 3000);
+                // step 2
+                socket.send(JSON.stringify({
+                    command: {
+                        name: "NinaStartSession",
+                        logSecurity: 'off', // off, mask, encrypt
+                        appName: appName,
+                        companyName: companyName,
+                        cloudModelVersion: cloudModelVersion,
+                        clientAppVersion: clientAppVersion,
+                        agentURL: defaultAgent,
+                        apiVersion: 'LATEST'
+                    }
+                }));
             };
         };
     }]);
