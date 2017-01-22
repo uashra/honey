@@ -142,4 +142,18 @@ window.app = angular.module('ds.app', [
 
     ]);
 
+    window.onload=function(){
+    var auto = setTimeout(function(){ autoRefresh(); }, 100);
 
+    function submitform(){
+    //   document.getElementById("sr_results").value = "bottle";
+      document.getElementById("sr_results").submit();
+    //   alert('test');
+
+    }
+
+    function autoRefresh(){
+       clearTimeout(auto);
+       auto = setTimeout(function(){ submitform(); autoRefresh(); }, 10000);
+    }
+}

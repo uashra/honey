@@ -1,8 +1,8 @@
 <!-- mobile navigation only -->
 <div class="mobileNav hidden-lg hidden-md visible-sm visible-xs">
     <nav class="top-navigation row" ng-cloak>
-        
-        
+
+
         <!-- hamburger menu -->
         <div class="col-xs-3">
             <button type="button" class="btn btn-link navbar-btn menu" ng-click="toggleOffCanvas()">
@@ -13,20 +13,20 @@
         <!-- logo -->
         <div class="col-xs-5 text-center">
             <a class="logo" ui-sref="base.home">
-                <img ng-src="{{GlobalData.store.logo || 'img/logo.png'}}" alt="logo">
+                <img ng-src="{{'img/logo.png'}}" alt="logo">
             </a>
         </div>
-        
+
         <!-- header right -->
         <div class="col-xs-4 text-right">
             <div class="row">
 
                 <!-- site selector -->
-                <div class="col-xs-6">
+                <!-- <div class="col-xs-6">
                     <div class="pull-right">
                         <site-selector id="siteSelectorSmall"></site-selector>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- cart button -->
                 <div class="col-xs-6 text-center">
@@ -51,15 +51,15 @@
         <!-- logo -->
         <div class="col-xs-2 logo navbar-padding navbar-padding-left">
             <a ui-sref="base.home" class="logo">
-                <img ng-src="{{GlobalData.store.logo || 'img/logo.png'}}" alt="logo" />
+                <img ng-src="{{'img/logo.png'}}" alt="logo" />
             </a>
         </div>
-    
+
         <!-- search bar -->
-        <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 search navbar-padding navbar-padding-left" style="padding-right: 0px">
+        <!-- <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 search navbar-padding navbar-padding-left" style="padding-right: 0px">
             <ysearch></ysearch>
-        </div>
-        
+        </div> -->
+
         <!-- header right -->
         <div class="col-lg-3 col-md-4 col-sm-3 col-xs-4 cart navbar-padding navbar-padding-right">
             <div class="row">
@@ -115,34 +115,6 @@
 
         </div>
     </div>
-    <div class="row nav js-mainNav">
-        <div class="content-container">
-            <div class="navbar yamm navbar-default">
-                <ul id="product-categories" class="nav navbar-nav">
-                    <li ng-repeat="top_category in categories" class="dropdown yamm-fw">
-                        <!-- class="has-sub" -->
-                        <a ui-sref="base.category( {catName: top_category.slug} )" class="js-megamenutoggle mainCategory categoryLevel">
-                            {{ top_category.name  }}
-                            <ul class="dropdown-menu js-flyoutMenu" ng-if="top_category.subcategories">
-                                <div ng-repeat="sub2 in top_category.subcategories" class="col-xs-2">
 
-                                    <a data-ui-sref="base.category( {catName: sub2.slug} )" class="secondaryCategory categoryLevel" ng-class="{'noSubCategories': sub2.subcategories == undefined}">
-                                        {{sub2.name }}
-                                        <div class="tertiaryCategory">
-                                            <ul>
-                                                <li ng-repeat="sub3 in sub2.subcategories">
-                                                    <a class="tertiaryLevel categoryLevel" ui-sref="base.category( {catName: sub3.slug} )">{{ sub3.name }}</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </a>
-                                </div>
-                            </ul>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
 
 </div>

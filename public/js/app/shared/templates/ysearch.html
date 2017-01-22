@@ -1,12 +1,10 @@
 <div class="y-search" ng-show="search.searchAvailable">
-    <form name="searchForm" novalidate ng-submit="goToResultsPage()">
+    <form name="searchForm" novalidate ng-submit="goToResultsPage()" class="form-wrapper cf">
         <div class="right-inner-addon">
-            <i ng-class="{'active': search.showSearchResults}" class="glyphicon glyphicon-search js-glyphicon"></i>
-            <input id="search" autocomplete="off" placeholder="{{'SEARCH' | translate}}" type="text" ng-model="search.text"
-                   ng-change="doSearch(search.text, search.page)" ng-focus="showSearchResults()"
-                   class="y-input form-control input-md"/>
-                   
-                   <button type="button" id="sr_button" class="btn btn-lg btn-primary" onclick="startSRRecording()">Start recording</button>
+            <!-- <i ng-class="{'active': search.showSearchResults}" class="glyphicon glyphicon-search js-glyphicon"></i> -->
+            <input id="sr_results" autocomplete="off" placeholder="{{'Milk' | translate}}" type="text" ng-model="search.text" rows="20" ng-change="doSearch(search.text, search.page)" ng-focus="showSearchResults()" class="y-input form-control input-md"/>
+
+            <button type="button" id="sr_button" class="btn btn-lg btn-default speak" onclick="startSRRecording()">Start speaking</button>
         </div>
         <div class="y-search-container" ng-show="search.showSearchResults && search.results.length > 0">
             <a class="form-control y-search-results" ng-click="hideSearchResults()"
