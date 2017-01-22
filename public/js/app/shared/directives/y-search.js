@@ -189,9 +189,9 @@ angular.module('ds.ysearch')
             var nmaidKey = "0d11e9c5b897eefdc7e0aad840bf4316a44ea91f0d76a2b053be294ce95c7439dee8c3a6453cf7db31a12e08555b266d54c2300470e4140a4ea4c8ba285962fd";
             var username = "websocket_sample";
 
-            var appName = 'SamAppJan20';
-            var companyName = 'SamCoJan2017';
-            var cloudModelVersion = '1.0';
+            var appName = 'ConnuHacks';
+            var companyName = 'HackAshraCo';
+            var cloudModelVersion = '1.0.2';
             var clientAppVersion = '0.0';
             var defaultAgent = 'http://ac-srvozrtr01.dev.ninaweb.nuance.com/nuance-nim_team-englishus-WebBotRouter/jbotservice.asmx/TalkAgent';
 
@@ -207,7 +207,41 @@ angular.module('ds.ysearch')
                 else
                 {
                     var response = JSON.parse(event.data);
+                    
                     console.log(response);
+                    
+                    if(response.QueryResult != null)
+                    {
+                    	if(response.QueryResult.transcription != null)
+                    	{
+                    		scope.searchForm.searchString = response.QueryResult.transcription;
+                            
+                    		$("#sr_results").val("asa");
+                        	console.log(scope.searchForm.searchString);
+                    	}
+                    	
+                    }
+                    
+                    
+                    /*
+                    if(response.QueryInfo != null)
+                    {
+                    	console.log(response.QueryInfo.result_type);
+                    }
+                    else if(response.QueryResult != null)
+                    {
+                    	console.log(response.Result);
+                    }
+                    else            	
+                    {
+                    	scope.somePlaceholder = response.QueryResult.transcription;
+                    
+                    	console.log(scope.somePlaceholder);
+                    
+                    	console.log(response);
+                    }
+                    
+                    */
                 }
             };
 
@@ -220,54 +254,61 @@ angular.module('ds.ysearch')
                     }
                 }));
 
-                socket.send(JSON.stringify({
-                    command: {
-                        name: "NinaStartSession",
-                        logSecurity: 'off', // off, mask, encrypt
-                        appName: appName,
-                        companyName: companyName,
-                        cloudModelVersion: cloudModelVersion,
-                        clientAppVersion: clientAppVersion,
-                        agentURL: defaultAgent,
-                        apiVersion: 'LATEST'
-                    }
-                }));
+                setTimeout(function() {
+                	socket.send(JSON.stringify({
+                        command: {
+                            name: "NinaStartSession",
+                            logSecurity: 'off', // off, mask, encrypt
+                            appName: appName,
+                            companyName: companyName,
+                            cloudModelVersion: cloudModelVersion,
+                            clientAppVersion: clientAppVersion,
+                            agentURL: defaultAgent,
+                            apiVersion: 'LATEST'
+                        }
+                    }));
+                }, 1000);
 
-                socket.send(JSON.stringify({
-                    command: {
-                        name: "NinaDoSpeechRecognition",
-                        logSecurity: 'off',
-                        sr_engine: 'NR',
-                        sr_engine_parameters: {"operating_mode":'accurate'} // accurate, fast, warp
-                    }
-                }));
-
+                setTimeout(function() {
+                	socket.send(JSON.stringify({
+                        command: {
+                            name: "NinaDoSpeechRecognition",
+                            logSecurity: 'off',
+                            sr_engine: 'NR',
+                            sr_engine_parameters: {"operating_mode":'accurate'} // accurate, fast, warp
+                        }
+                    }));
+                }, 2000);
+                
                 audioRecorder = new AudioRecorder(initAudioContext());
 
-                audioRecorder.start().then(
-                    function () {
-                        // console.log("Recorder stopped.");
-                    },
-
-                    function () {
-                        // console.log("Recording failed!!!");
-                    },
-
-                    function (data) {
-                        // console.log("Audio data received...");
-
-                        if (shouldStopRecording) {
-                            return;
-                        }
-
-                        // tuple: [encodedSpx, ampArray]
-                        //   resampled audio as Int16Array
-                        //   amplitude data as Uint8Array
-                        var frames = data[0]; // Int16Array
-
-                        socket.send(frames.buffer);
-                    }
-                );
+                
+                setTimeout(function() {                
+	                audioRecorder.start().then(
+	                    function () {
+	                        console.log("Recorder stopped.");
+	                    },
+	
+	                    function () {
+	                        console.log("Recording failed!!!");
+	                    },
+	
+	                    function (data) {
+	                        console.log("Audio data received...");
+	
+	                        if (shouldStopRecording) {
+	                            return;
+	                        }
+	
+	                        // tuple: [encodedSpx, ampArray]
+	                        //   resampled audio as Int16Array
+	                        //   amplitude data as Uint8Array
+	                        var frames = data[0]; // Int16Array
+	
+	                        socket.send(frames.buffer);
+	                    }
+	                ); 
+                }, 3000);
             };
         };
     }]);

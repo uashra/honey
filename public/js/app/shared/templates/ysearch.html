@@ -2,7 +2,7 @@
     <form name="searchForm" novalidate ng-submit="goToResultsPage()" class="form-wrapper cf">
         <div class="right-inner-addon">
             <!-- <i ng-class="{'active': search.showSearchResults}" class="glyphicon glyphicon-search js-glyphicon"></i> -->
-            <input id="sr_results" autocomplete="off" placeholder="{{'Milk' | translate}}" type="text" ng-model="search.text" rows="20" ng-change="doSearch(search.text, search.page)" ng-focus="showSearchResults()" class="y-input form-control input-md"/>
+            <input id="sr_results" autocomplete="off" placeholder="text2" type="text" ng-model="search.text" rows="20" ng-change="doSearch(search.text, search.page)" ng-focus="showSearchResults()" class="y-input form-control input-md"/>
 
             <button type="button" id="sr_button" ng-class="className" ng-click="voiceToggle()">{{voiceButtonText|translate}}</button>
         </div>
