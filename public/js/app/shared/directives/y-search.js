@@ -256,6 +256,7 @@ angular.module('ds.ysearch')
 
                         try
                         {
+                            scope.search.text = response.QueryResult.transcription;
                             scope.search.searchString = response.QueryResult.transcription;
                         } catch (err)
                         {
