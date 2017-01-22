@@ -151,20 +151,124 @@ angular.module('ds.ysearch')
         scope.className = 'btn btn-lg btn-success';
         scope.voiceButtonText = 'Start Listening';
 
+        var socket,
+            audioRecorder,
+            shouldStopRecording;
+
         scope.voiceToggle = function() {
             switch (scope.className) {
                 case 'btn btn-lg btn-danger active':
                     scope.className = 'btn btn-lg btn-success';
                     scope.voiceButtonText = 'Start Listening';
+
+                    shouldStopRecording = true;
+                    if (audioRecorder) {
+                        audioRecorder.stop();
+                        audioRecorder = undefined;
+                    }
+                    if (socket) {
+                        socket.send(JSON.stringify({
+                            endcommand: {}
+                        }));
+                    }
                     break;
                 default:
                     scope.className = 'btn btn-lg btn-danger active';
                     scope.voiceButtonText = 'Stop Listening';
+                    shouldStopRecording = false;
+                    scope.startListening();
             }
         };
 
         scope.startListening = function() {
+            var sHost = "nim-rd.nuance.mobi";
+            var sPort = 9443;
+            var socketPath = "nina-webapi/nina";
 
+            var nmaid = "Nuance_ConUHack2017_20170119_210049";
+            var nmaidKey = "0d11e9c5b897eefdc7e0aad840bf4316a44ea91f0d76a2b053be294ce95c7439dee8c3a6453cf7db31a12e08555b266d54c2300470e4140a4ea4c8ba285962fd";
+            var username = "websocket_sample";
+
+            var appName = 'SamAppJan20';
+            var companyName = 'SamCoJan2017';
+            var cloudModelVersion = '1.0';
+            var clientAppVersion = '0.0';
+            var defaultAgent = 'http://ac-srvozrtr01.dev.ninaweb.nuance.com/nuance-nim_team-englishus-WebBotRouter/jbotservice.asmx/TalkAgent';
+
+            socket = new WebSocket("wss://" + sHost + ":" + sPort + "/" + socketPath);
+            socket.binaryType = "arraybuffer";
+
+            socket.onmessage = function (event) {
+                if (isOfType("ArrayBuffer", event.data))
+                {
+                    console.log("ArrayBuffer");
+                    audioPlayer.play(event.data);
+                }
+                else
+                {
+                    var response = JSON.parse(event.data);
+                    console.log(response);
+                }
+            };
+
+            socket.onopen = function () {
+                socket.send(JSON.stringify({
+                    connect: {
+                        nmaid: nmaid,
+                        nmaidKey: nmaidKey,
+                        username: username
+                    }
+                }));
+
+                socket.send(JSON.stringify({
+                    command: {
+                        name: "NinaStartSession",
+                        logSecurity: 'off', // off, mask, encrypt
+                        appName: appName,
+                        companyName: companyName,
+                        cloudModelVersion: cloudModelVersion,
+                        clientAppVersion: clientAppVersion,
+                        agentURL: defaultAgent,
+                        apiVersion: 'LATEST'
+                    }
+                }));
+
+                socket.send(JSON.stringify({
+                    command: {
+                        name: "NinaDoSpeechRecognition",
+                        logSecurity: 'off',
+                        sr_engine: 'NR',
+                        sr_engine_parameters: {"operating_mode":'accurate'} // accurate, fast, warp
+                    }
+                }));
+
+                audioRecorder = new AudioRecorder(initAudioContext());
+
+                audioRecorder.start().then(
+                    function () {
+                        // console.log("Recorder stopped.");
+                    },
+
+                    function () {
+                        // console.log("Recording failed!!!");
+                    },
+
+                    function (data) {
+                        // console.log("Audio data received...");
+
+                        if (shouldStopRecording) {
+                            return;
+                        }
+
+                        // tuple: [encodedSpx, ampArray]
+                        //   resampled audio as Int16Array
+                        //   amplitude data as Uint8Array
+                        var frames = data[0]; // Int16Array
+
+                        socket.send(frames.buffer);
+                    }
+                );
+            };
         };
     }]);
 
