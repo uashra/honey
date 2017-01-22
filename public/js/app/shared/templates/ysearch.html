@@ -4,7 +4,7 @@
             <!-- <i ng-class="{'active': search.showSearchResults}" class="glyphicon glyphicon-search js-glyphicon"></i> -->
             <input id="sr_results" autocomplete="off" placeholder="{{'Milk' | translate}}" type="text" ng-model="search.text" rows="20" ng-change="doSearch(search.text, search.page)" ng-focus="showSearchResults()" class="y-input form-control input-md"/>
 
-            <button type="button" id="sr_button" class="btn btn-lg btn-default speak" onclick="startSRRecording()">Start speaking</button>
+            <button type="button" id="sr_button" class="btn btn-lg btn-default speak" onclick="startSRRecording()">{{'Start speaking' | translate}}</button>
         </div>
         <div class="y-search-container" ng-show="search.showSearchResults && search.results.length > 0">
             <a class="form-control y-search-results" ng-click="hideSearchResults()"
