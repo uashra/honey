@@ -45,7 +45,6 @@ a {
 
 .home-container{
     position: absolute;
-    // padding-top: 15%;
     width: 100%;
     .home-title{
         text-align: center;
@@ -65,11 +64,12 @@ a {
         }
     }
 }
-#sr_results{
+#sr_results, #sr_button {
+    display: inline-block;
+}
+#sr_results {
     width: 450px;
     background: #eee;
-    padding: 15px;
-    margin: 60px auto 50px auto;
     box-shadow: 0 1px 1px rgba(0,0,0,.4) inset, 0 1px 0 rgba(255,255,255,.2);
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -78,10 +78,8 @@ a {
     font: bold 15px/20px @font-main;
     color: @color-light;
     text-transform: uppercase;
-    margin-top: 20px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
-
 }
 .right-inner-addon{
     text-align: center;

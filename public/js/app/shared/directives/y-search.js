@@ -37,11 +37,11 @@ angular.module('ds.ysearch')
             scope.searchString = '';
         }
         scope.search = {
-            text: '',
+            text: scope.searchString,
             results: [],
             numberOfHits: 0,
             showSearchResults: false,
-            searchAvailable: false,
+            searchAvailable: true,
             searchError: false,
             zeroResults: false
         };
@@ -171,14 +171,14 @@ angular.module('ds.ysearch')
                             endcommand: {}
                         }));
                     }
-                    
+
                     break;
                 default:
                     scope.className = 'btn btn-lg btn-danger active';
                     scope.voiceButtonText = 'Stop Listening';
                     shouldStopRecording = false;
                     scope.startListening();
-                    
+
                     //scope.search.searchAvailable = true;
             		//scope.search.text = 'Testing';
             		//$('#sr_results').get(0).focus();
@@ -188,7 +188,7 @@ angular.module('ds.ysearch')
 
         scope.startListening = function() {
             var _scope = scope;
-            
+
         	var sHost = "nim-rd.nuance.mobi";
             var sPort = 9443;
             var socketPath = "nina-webapi/nina";
@@ -261,7 +261,7 @@ angular.module('ds.ysearch')
                             socket.close();
                             socket = undefined;
                         }
-                        else if (response.QueryResult.result_type === "NinaDoNR") {                        	
+                        else if (response.QueryResult.result_type === "NinaDoNR") {
                         	try {
                         		scope.search.searchAvailable = true;
                         		scope.search.text = response.QueryResult.transcription;
