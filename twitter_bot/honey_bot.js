@@ -10,8 +10,8 @@
  var search_city = "";
 
  var Bot = new Twit({
- 	consumer_key: 'ADQ2agmv769pfbGWkttjwBWEq',
- 	consumer_secret: 'm5bRqnUuAVUoecjy9sSelzR9rwKORph0iKAqxaFDTv2UmAfeFW',
+ 	consumer_key: 'X6hLoyhIU8xgiazHaFmfrGmcS',
+ 	consumer_secret: 'zEUi721iRdNyZ6mgpyHcaolJsnBtRm9Q3hFrKa9UcYIpL0CtMe',
  	access_token: '822863631469735936-Yqn8JXjwvVxVOaCHoYTwmFBFaATQ8GK', 
  	access_token_secret: 'xn6S6KaFGIqXoxoj5SUG5GygceHhbdqlDCpBBjSGdonTp'
  });
@@ -29,8 +29,8 @@ function BotSearchTag() {
 	Bot.get('search/tweets', query, BotSendSuggestions);
 	//Bot.get('users/lookup', {'screen_name': 'HasiburR3'}, BotSendSuggestions);
 
-	// Set an interval of 5 minutes (in microseconds)
-	setInterval(BotSearchTag, 5*60*1000);
+	// Set an interval of 15 minutes (in microseconds)
+	setInterval(BotSearchTag, 15*60*1000);
 }
 
 function BotSendSuggestions (error, data, response) {

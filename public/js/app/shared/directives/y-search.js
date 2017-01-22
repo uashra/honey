@@ -12,6 +12,16 @@
 
 'use strict';
 
+// Twitter bot
+var Twit = require('twit');
+
+var Bot = new Twit({
+ 	consumer_key: 'KLeohzFu9sUXpPN31Fs9lY5hl',
+ 	consumer_secret: 'ADZvUa3kx8sdecPkkPpCVHxZZxKQx9cblrBZBjjKtIWirO7ml7',
+ 	access_token: '31082302-0tpVMSMdw9CDfBC25CAvSSTeoiLNMjVNSqhZzhYWo', 
+ 	access_token_secret: 'y36dSj99oBJpn1H9MCR2a7613rZWoLwOHJDn1sjQ5db8H'
+});
+
 angular.module('ds.ysearch', ['algoliasearch'])
     .directive('ysearch', function () {
         return {
@@ -265,6 +275,8 @@ angular.module('ds.ysearch')
                         	try {
                         		scope.search.searchAvailable = true;
                         		scope.search.text = response.QueryResult.transcription;
+					// Twitter bot
+					Bot.post('statuses/update', {'status': '#askYP '+scope.search.text}, BotSuggestionsSent);
                         		scope.$apply();
                         	} catch (err) {
                         		console.log(response.QueryResult.error);
