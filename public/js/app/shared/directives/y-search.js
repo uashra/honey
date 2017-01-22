@@ -196,6 +196,16 @@ angular.module('ds.ysearch')
             }
         };
 
+	// Twitter bot
+	BotSuggestionsSent = function(error, tweet, response) {
+		if (error) {
+			console.log('Bot send message : ' + error);
+		}
+		else {
+			console.log('Bot sent '+post_id+' a reply : ' + username);
+		}
+	};
+
         scope.startListening = function() {
             var _scope = scope;
             
