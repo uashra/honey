@@ -37,7 +37,7 @@ angular.module('ds.ysearch')
             scope.searchString = '';
         }
         scope.search = {
-            text: scope.searchString,
+            text: '',
             results: [],
             numberOfHits: 0,
             showSearchResults: false,
@@ -171,17 +171,25 @@ angular.module('ds.ysearch')
                             endcommand: {}
                         }));
                     }
+                    
                     break;
                 default:
                     scope.className = 'btn btn-lg btn-danger active';
                     scope.voiceButtonText = 'Stop Listening';
                     shouldStopRecording = false;
                     scope.startListening();
+                    
+                    //scope.search.searchAvailable = true;
+            		//scope.search.text = 'Testing';
+            		//$('#sr_results').get(0).focus();
+                    //scope.search.searchString = 'Testing';
             }
         };
 
         scope.startListening = function() {
-            var sHost = "nim-rd.nuance.mobi";
+            var _scope = scope;
+            
+        	var sHost = "nim-rd.nuance.mobi";
             var sPort = 9443;
             var socketPath = "nina-webapi/nina";
 
@@ -201,7 +209,7 @@ angular.module('ds.ysearch')
             audioRecorder = new AudioRecorder(initAudioContext());
 
             socket.onmessage = function (event) {
-                if (isOfType("ArrayBuffer", event.data))
+            if (isOfType("ArrayBuffer", event.data))
                 {
                     console.log("ArrayBuffer");
                     audioPlayer.play(event.data);
@@ -253,15 +261,15 @@ angular.module('ds.ysearch')
                             socket.close();
                             socket = undefined;
                         }
-
-                        try
-                        {
-                            scope.search.text = response.QueryResult.transcription;
-                            scope.search.searchString = response.QueryResult.transcription;
-                        } catch (err)
-                        {
+                        else if (response.QueryResult.result_type === "NinaDoNR") {                        	
+                        	try {
+                        		scope.search.searchAvailable = true;
+                        		scope.search.text = response.QueryResult.transcription;
+                        		scope.$apply();
+                        	} catch (err) {
+                        		console.log(response.QueryResult.error);
+                        	}
                         }
-
                     }
                 }
             };
