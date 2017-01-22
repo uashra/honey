@@ -5,6 +5,8 @@
             <input id="search" autocomplete="off" placeholder="{{'SEARCH' | translate}}" type="text" ng-model="search.text"
                    ng-change="doSearch(search.text, search.page)" ng-focus="showSearchResults()"
                    class="y-input form-control input-md"/>
+                   
+                   <button type="button" id="sr_button" class="btn btn-lg btn-primary" onclick="startSRRecording()">Start recording</button>
         </div>
         <div class="y-search-container" ng-show="search.showSearchResults && search.results.length > 0">
             <a class="form-control y-search-results" ng-click="hideSearchResults()"
