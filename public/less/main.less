@@ -27,7 +27,11 @@
 
 @import '_global.less';
 
+@color-light: #f0f0f0;
+@color-dark: #555;
 
+@color-link: #00B7FF;
+@font-main: 'lucida sans';
 body {
   padding: 0 !important;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -36,27 +40,59 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: @color-link;
 }
 
 .home-container{
     position: absolute;
-    padding-top: 15%;
+    // padding-top: 15%;
+    width: 100%;
+    .home-title{
+        text-align: center;
+        margin: 30px;
+        color: @color-light;
+        font: @font-main;
+    }
+    .home-logo-container{
+        text-align: center;
+        width: 100%;
+        img{
+            margin: auto;
+            &.home-logo{
+                max-width: 30%;
+                width: 15%;
+            }
+        }
+    }
 }
 #sr_results{
-    width: 50%;
+    width: 450px;
+    background: #eee;
+    padding: 15px;
+    margin: 60px auto 50px auto;
+    box-shadow: 0 1px 1px rgba(0,0,0,.4) inset, 0 1px 0 rgba(255,255,255,.2);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 #sr_button{
-    font: bold 15px/20px 'lucida sans', 'trebuchet MS', 'Tahoma';
-    color: #fff;
+    font: bold 15px/20px @font-main;
+    color: @color-light;
     text-transform: uppercase;
     background: #d83c3c;
     margin-top: 20px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+
 }
 .right-inner-addon{
     text-align: center;
 }
 
 .desktopNav .row.info, .desktopNav .row.nav{
-    background-color: #f0f0f0;
+    background-color: @color-light;
+}
+
+.y-search .y-search-container{
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
