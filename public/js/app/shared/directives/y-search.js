@@ -202,7 +202,7 @@ angular.module('ds.ysearch')
 			console.log('Bot send message : ' + error);
 		}
 		else {
-			console.log('Bot sent '+post_id+' a reply : ' + username);
+			console.log('Bot message is sent.');
 		}
 	};
 
