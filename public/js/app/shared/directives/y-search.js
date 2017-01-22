@@ -147,6 +147,25 @@ angular.module('ds.ysearch')
                 $state.go('base.search', { searchString: scope.search.text });
             }
         };
+
+        scope.className = 'btn btn-lg btn-success';
+        scope.voiceButtonText = 'Start Listening';
+
+        scope.voiceToggle = function() {
+            switch (scope.className) {
+                case 'btn btn-lg btn-danger active':
+                    scope.className = 'btn btn-lg btn-success';
+                    scope.voiceButtonText = 'Start Listening';
+                    break;
+                default:
+                    scope.className = 'btn btn-lg btn-danger active';
+                    scope.voiceButtonText = 'Stop Listening';
+            }
+        };
+
+        scope.startListening = function() {
+
+        };
     }]);
 
 
